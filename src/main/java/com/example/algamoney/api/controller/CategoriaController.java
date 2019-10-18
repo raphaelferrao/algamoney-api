@@ -3,6 +3,8 @@ package com.example.algamoney.api.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +32,7 @@ public class CategoriaController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> store(@RequestBody Categoria categoria){
+	public ResponseEntity<?> store(@Valid @RequestBody final Categoria categoria){
 		Categoria novaCategoria = categoriaService.criar(categoria);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}")

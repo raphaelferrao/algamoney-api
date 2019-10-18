@@ -7,7 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-public class StandardError implements Serializable {
+public class StandardErrorDTO implements Serializable {
 	
 	private static final long serialVersionUID = 6195525444867818110L;
 
@@ -18,15 +18,15 @@ public class StandardError implements Serializable {
 	private String error;
 	
 	@JsonInclude(Include.NON_NULL)
-	private List<String> messages;
+	private List<ErrorDTO> messages;
 	
 	private String path;
 	
-	public StandardError() {
+	public StandardErrorDTO() {
 		
 	}
 	
-	public StandardError(Long timestamp, Integer status, String error, String path) {
+	public StandardErrorDTO(Long timestamp, Integer status, String error, String path) {
 		super();
 		this.timestamp = timestamp;
 		this.status = status;
@@ -62,13 +62,13 @@ public class StandardError implements Serializable {
 		this.path = path;
 	}
 
-	public List<String> getMessages() {
+	public List<ErrorDTO> getMessages() {
 		if (messages == null) {
 			messages = new ArrayList<>();
 		}
 		return messages;
 	}
-	public void setMessages(List<String> messages) {
+	public void setMessages(List<ErrorDTO> messages) {
 		this.messages = messages;
 	}
 	
