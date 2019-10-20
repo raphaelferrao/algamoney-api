@@ -12,4 +12,6 @@ public interface PessoaService {
 
 	public Pessoa obterPorId(Long id);
 
+	public void delete(Long id);
+
 }

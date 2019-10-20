@@ -32,6 +32,12 @@ public class PessoaServiceImpl implements PessoaService {
 		Optional<Pessoa> optional = pessoaRepository.findById(id);
 		return optional.orElseThrow(() -> new ObjectNotFoundException("Pessoa not found! Id: " + id));
 	}
+
+	@Override
+	public void delete(Long id) {
+		Pessoa pessoa = this.obterPorId(id);
+		pessoaRepository.deleteById(id);
+	}
 	
 
 }
