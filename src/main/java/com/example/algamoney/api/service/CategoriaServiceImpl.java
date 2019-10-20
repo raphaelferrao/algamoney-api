@@ -30,7 +30,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 	@Override
 	public Categoria obterPorId(Integer id) {
 		Optional<Categoria> optional = categoriaRepository.findById(id);
-		return optional.orElseThrow(() -> new ObjectNotFoundException("Graph not found! Id: " + id));
+		return optional.orElseThrow(() -> new ObjectNotFoundException("Categoria not found! Id: " + id));
 	}
 	
 

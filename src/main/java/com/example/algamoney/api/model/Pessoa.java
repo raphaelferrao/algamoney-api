@@ -2,6 +2,7 @@ package com.example.algamoney.api.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,30 +11,50 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Categoria implements Serializable {
+public class Pessoa implements Serializable {
 
-	private static final long serialVersionUID = 4530572705096941024L;
+	private static final long serialVersionUID = -8118776210225046467L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer codigo;
+	private Long codigo;
 	
 	@NotNull
 	@Size(min=3, max=50)
 	private String nome;
 	
-	public Integer getCodigo() {
+	@Embedded
+	private Endereco endereco;
+	
+	@NotNull
+	private Boolean ativo;
+
+	public Long getCodigo() {
 		return codigo;
 	}
-	public void setCodigo(Integer codigo) {
+	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
-	
+
 	public String getNome() {
 		return nome;
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public Endereco getEndereco() {
+		return endereco;
+	}
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 	
 	@Override
@@ -52,7 +73,7 @@ public class Categoria implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Categoria other = (Categoria) obj;
+		Pessoa other = (Pessoa) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;
@@ -63,7 +84,7 @@ public class Categoria implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Categoria [codigo=" + codigo + ", nome=" + nome + "]";
+		return "Pessoa [codigo=" + codigo + ", nome=" + nome + "]";
 	}
 	
 }
