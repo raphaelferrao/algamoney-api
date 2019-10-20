@@ -1,6 +1,7 @@
 package com.example.algamoney.api.exception.handler;
 
 import java.util.Calendar;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,6 +11,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -44,7 +46,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		if ( (exception != null) && (exception.getBindingResult() != null) && (!Utils.empty(exception.getBindingResult().getFieldErrors())) ) {
 			for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
-				// standardErrorResponse.getMessages().add(fieldError.getField() + " " + fieldError.getDefaultMessage());
 				standardErrorResponse.getMessages().add(new ErrorDTO(fieldError.toString(), messageSource.getMessage(fieldError, LocaleContextHolder.getLocale())));
 			}
 		}
@@ -73,6 +74,26 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(exception, standardErrorResponse, headers, httpStatus, request);
 	}
 	
+	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException exception,
+			final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
+
+		final HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+		
+		final String msgError = messageSource.getMessage("msg.error.missing.servlet.request.parameter", null, LocaleContextHolder.getLocale());
+		
+		final StandardErrorDTO standardErrorResponse = new StandardErrorDTO(Calendar.getInstance().getTimeInMillis(), httpStatus.value(), 
+				msgError, request.getContextPath());
+		
+		if (exception != null) {
+			final String msg = Optional.ofNullable(exception.getCause()).orElse(exception).toString();
+			
+			standardErrorResponse.getMessages().add(new ErrorDTO(msg, msgError));
+		}
+		
+		return handleExceptionInternal(exception, standardErrorResponse, headers, httpStatus, request);
+	}	
+	
 	@ExceptionHandler(ObjectNotFoundException.class)
 	public ResponseEntity<StandardErrorDTO> handleObjectNotFound(
 			final ObjectNotFoundException exception, final HttpServletRequest httpServletRequest) {
@@ -100,6 +121,5 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return ResponseEntity.status(httpStatus).body(standardErrorResponse);
 	}
-
 
 }

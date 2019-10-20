@@ -14,4 +14,8 @@ public interface PessoaService {
 
 	public void delete(Long id);
 
+	public Pessoa update(Long id, Pessoa pessoa);
+
+	public void updateAtivo(Long id, Boolean ativo);
+
 }

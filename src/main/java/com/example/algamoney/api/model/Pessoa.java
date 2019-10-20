@@ -67,18 +67,21 @@ public class Pessoa implements Serializable {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if ( (obj == null) || (getClass() != obj.getClass()) ) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
+		
 		Pessoa other = (Pessoa) obj;
 		if (codigo == null) {
-			if (other.codigo != null)
+			if (other.codigo != null) {
 				return false;
-		} else if (!codigo.equals(other.codigo))
+			}
+		} else if (!codigo.equals(other.codigo)) {
 			return false;
+		}
 		return true;
 	}
 	

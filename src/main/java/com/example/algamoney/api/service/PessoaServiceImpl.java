@@ -3,6 +3,7 @@ package com.example.algamoney.api.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,7 @@ public class PessoaServiceImpl implements PessoaService {
 
 	@Override
 	public Pessoa criar(Pessoa pessoa) {
-		Pessoa novaPessoa = pessoaRepository.save(pessoa);
-		return novaPessoa;
+		return pessoaRepository.save(pessoa);
 	}
 
 	@Override
@@ -34,9 +34,23 @@ public class PessoaServiceImpl implements PessoaService {
 	}
 
 	@Override
-	public void delete(Long id) {
-		Pessoa pessoa = this.obterPorId(id);
+	public void delete(final Long id) {
+		this.obterPorId(id);
 		pessoaRepository.deleteById(id);
+	}
+
+	@Override
+	public Pessoa update(final Long id, final Pessoa pessoaAlterada) {
+		Pessoa pessoa = this.obterPorId(id);
+		BeanUtils.copyProperties(pessoaAlterada, pessoa, "codigo");
+		return pessoaRepository.save(pessoa);
+	}
+
+	@Override
+	public void updateAtivo(final Long id, final Boolean ativo) {
+		Pessoa pessoa = this.obterPorId(id);
+		pessoa.setAtivo(ativo);
+		pessoaRepository.save(pessoa);
 	}
 	
 

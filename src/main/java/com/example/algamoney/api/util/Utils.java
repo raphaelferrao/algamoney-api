@@ -6,16 +6,17 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Utils {
+	
+	private Utils() {
+		
+	}
 
 	public static boolean empty(final String text){
 		if ( text!=null ){
 			String textTrim = text.trim();
-			if (!"".equals(textTrim)){
-				return false;
-			}
-			return true;
+			return ("".equals(textTrim));
 		}
-		return false;
+		return true;
 	}
 	
 	public static boolean empty(final Collection<?> collection) {
@@ -43,9 +44,7 @@ public class Utils {
 	public static boolean empty(final Map<?, ?> map) {
 		boolean empty = false;
 		
-		if (map == null) {
-			empty = true;
-		} else if (map.isEmpty()) {
+		if ( (map == null) || (map.isEmpty()) )  {
 			empty = true;
 		}
 		

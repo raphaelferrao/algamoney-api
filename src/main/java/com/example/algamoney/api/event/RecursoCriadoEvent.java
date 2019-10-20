@@ -8,7 +8,7 @@ public class RecursoCriadoEvent extends ApplicationEvent {
 
 	private static final long serialVersionUID = -8456496638934868695L;
 	
-	private HttpServletResponse response;
+	private transient HttpServletResponse response;
 	private Long codigo;
 
 	public RecursoCriadoEvent(final Object source, final HttpServletResponse response, final Long codigo) {
