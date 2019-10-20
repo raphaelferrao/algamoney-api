@@ -16,16 +16,16 @@ public class Categoria implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer codigo;
+	private Long codigo;
 	
 	@NotNull
 	@Size(min=3, max=50)
 	private String nome;
 	
-	public Integer getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
-	public void setCodigo(Integer codigo) {
+	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
 	
