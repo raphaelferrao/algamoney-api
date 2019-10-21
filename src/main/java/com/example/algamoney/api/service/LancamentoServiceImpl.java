@@ -48,6 +48,12 @@ public class LancamentoServiceImpl implements LancamentoService {
 	public List<Lancamento> pesquisar(final LancamentoFilter lancamentoFilter) {
 		return lancamentoRepository.filtrar(lancamentoFilter);
 	}
+
+	@Override
+	public void delete(final Long id) {
+		this.obterPorId(id);
+		lancamentoRepository.deleteById(id);
+	}
 	
 
 }

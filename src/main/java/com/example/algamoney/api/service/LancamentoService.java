@@ -15,4 +15,6 @@ public interface LancamentoService {
 
 	public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter);
 
+	public void delete(Long id);
+
 }
