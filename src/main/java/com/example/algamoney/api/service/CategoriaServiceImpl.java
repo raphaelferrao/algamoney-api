@@ -27,7 +27,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 	}
 
 	@Override
-	public Categoria obterPorId(Integer id) {
+	public Categoria obterPorId(Long id) {
 		Optional<Categoria> optional = categoriaRepository.findById(id);
 		return optional.orElseThrow(() -> new ObjectNotFoundException("Categoria not found! Id: " + id));
 	}

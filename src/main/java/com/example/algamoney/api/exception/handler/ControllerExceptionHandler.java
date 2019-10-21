@@ -5,9 +5,11 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -117,6 +119,26 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 					new String[] {exception.getParameter().getParameterName()}, LocaleContextHolder.getLocale());
 			
 			standardErrorResponse.getMessages().add(new ErrorDTO(exception.getMessage(), msgFriendly));
+		}
+		
+		return ResponseEntity.status(httpStatus).body(standardErrorResponse);
+	}
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<StandardErrorDTO> handleDataIntegrityViolationException(
+			final DataIntegrityViolationException exception, final HttpServletRequest httpServletRequest) {
+		
+		final HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+		
+		final String msgError = messageSource.getMessage("msg.error.data.integrity.violation", null, LocaleContextHolder.getLocale());
+		
+		final StandardErrorDTO standardErrorResponse = new StandardErrorDTO(Calendar.getInstance().getTimeInMillis(), httpStatus.value(), 
+				msgError, httpServletRequest.getRequestURI());
+		
+		if (exception != null) {
+			final String msg = Optional.ofNullable(ExceptionUtils.getRootCauseMessage(exception)).orElse(exception.toString());
+			
+			standardErrorResponse.getMessages().add(new ErrorDTO(msg, msgError));
 		}
 		
 		return ResponseEntity.status(httpStatus).body(standardErrorResponse);

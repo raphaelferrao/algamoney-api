@@ -10,6 +10,6 @@ public interface CategoriaService {
 
 	public Categoria criar(Categoria categoria);
 
-	public Categoria obterPorId(Integer id);
+	public Categoria obterPorId(Long id);
 
 }

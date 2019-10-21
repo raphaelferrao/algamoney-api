@@ -2,6 +2,7 @@ package com.example.algamoney.api.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -35,6 +36,7 @@ public class Endereco implements Serializable {
 	
 	@NotNull
 	@Size(min=2, max=2)
+	@Column(name = "sigla_uf")
 	private String siglaUf;
 
 	public String getCep() {
