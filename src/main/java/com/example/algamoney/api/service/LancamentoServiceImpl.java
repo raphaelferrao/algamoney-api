@@ -12,6 +12,7 @@ import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.PessoaRepository;
+import com.example.algamoney.api.repository.filter.LancamentoFilter;
 
 @Service
 public class LancamentoServiceImpl implements LancamentoService {
@@ -41,6 +42,11 @@ public class LancamentoServiceImpl implements LancamentoService {
 		}
 		
 		return lancamentoRepository.save(lancamento);
+	}
+
+	@Override
+	public List<Lancamento> pesquisar(final LancamentoFilter lancamentoFilter) {
+		return lancamentoRepository.filtrar(lancamentoFilter);
 	}
 	
 

@@ -40,7 +40,7 @@ public class CategoriaController extends GenericController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> get(@PathVariable Long id) {
+	public ResponseEntity<?> get(@PathVariable final Long id) {
 		Categoria categoria = categoriaService.obterPorId(id);
 		return ResponseEntity.ok(categoria);
 	}

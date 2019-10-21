@@ -26,6 +26,7 @@ import com.example.algamoney.api.exception.ErrorDTO;
 import com.example.algamoney.api.exception.PessoaInexistenteOuInativaException;
 import com.example.algamoney.api.exception.StandardErrorDTO;
 import com.example.algamoney.api.model.Lancamento;
+import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.service.LancamentoService;
 
 @RestController
@@ -36,13 +37,18 @@ public class LancamentoController extends GenericController {
 	private LancamentoService lancamentoService;
 	
 	@GetMapping
-	public ResponseEntity<?> index() {
-		List<Lancamento> lancamentos = lancamentoService.listarTodos();
+	public ResponseEntity<?> index(final LancamentoFilter lancamentoFilter) {
+		List<Lancamento> lancamentos = null;
+		if (lancamentoFilter==null) {
+			lancamentos = lancamentoService.listarTodos();
+		} else {
+			lancamentos = lancamentoService.pesquisar(lancamentoFilter);
+		}
 		return ResponseEntity.ok(lancamentos);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> get(@PathVariable Long id) {
+	public ResponseEntity<?> get(@PathVariable final Long id) {
 		Lancamento lancamento = lancamentoService.obterPorId(id);
 		return ResponseEntity.ok(lancamento);
 	}
