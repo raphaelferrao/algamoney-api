@@ -1,7 +1,6 @@
 package com.example.algamoney.api.controller;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +10,8 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,14 +40,8 @@ public class LancamentoController extends GenericController {
 	private LancamentoService lancamentoService;
 	
 	@GetMapping
-	public ResponseEntity<?> index(final LancamentoFilter lancamentoFilter) {
-		List<Lancamento> lancamentos = null;
-		if (lancamentoFilter==null) {
-			lancamentos = lancamentoService.listarTodos();
-		} else {
-			lancamentos = lancamentoService.pesquisar(lancamentoFilter);
-		}
-		return ResponseEntity.ok(lancamentos);
+	public Page<Lancamento> index(final LancamentoFilter lancamentoFilter, final Pageable pageable) {
+		return lancamentoService.pesquisar(lancamentoFilter, pageable);
 	}
 
 	@GetMapping("/{id}")

@@ -11,6 +11,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.model.Lancamento_;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
@@ -22,7 +26,7 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 	private EntityManager entityManager;
 
 	@Override
-	public List<Lancamento> filtrar(final LancamentoFilter lancamentoFilter) {
+	public Page<Lancamento> filtrar(final LancamentoFilter lancamentoFilter, final Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Lancamento> criteriaQuery = criteriaBuilder.createQuery(Lancamento.class);
 		Root<Lancamento> root = criteriaQuery.from(Lancamento.class);
@@ -31,7 +35,9 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		criteriaQuery.where(restrictions);
 		
 		TypedQuery<Lancamento> query = entityManager.createQuery(criteriaQuery);
-		return query.getResultList();
+		adicionarRestricoesPaginacao(query, pageable);
+		
+		return new PageImpl<>(query.getResultList(), pageable, obterTotal(lancamentoFilter));
 	}
 
 	private Predicate[] criarRestricoes(final LancamentoFilter lancamentoFilter, final CriteriaBuilder criteriaBuilder,
@@ -63,6 +69,29 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		}
 		
 		return predicates.toArray(new Predicate[predicates.size()]);
+	}
+
+	private void adicionarRestricoesPaginacao(final TypedQuery<Lancamento> query, final Pageable pageable) {
+		int paginaAtual = pageable.getPageNumber();
+		int totalRegistrosPorPagina = pageable.getPageSize();
+		int primeiroRegistroDaPagina = paginaAtual * totalRegistrosPorPagina;
+		
+		query.setFirstResult(primeiroRegistroDaPagina);
+		query.setMaxResults(totalRegistrosPorPagina);
+	}
+	
+
+	private Long obterTotal(final LancamentoFilter lancamentoFilter) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+		Root<Lancamento> root = criteriaQuery.from(Lancamento.class);
+		
+		Predicate[] restrictions = criarRestricoes(lancamentoFilter, criteriaBuilder, root);
+		criteriaQuery.where(restrictions);
+		
+		criteriaQuery.select(criteriaBuilder.count(root));
+		
+		return entityManager.createQuery(criteriaQuery).getSingleResult();
 	}
 
 }
