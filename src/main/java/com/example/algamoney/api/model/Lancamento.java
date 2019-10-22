@@ -1,5 +1,6 @@
 package com.example.algamoney.api.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -18,7 +19,7 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-public class Lancamento {
+public class Lancamento implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
