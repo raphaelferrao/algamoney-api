@@ -32,6 +32,7 @@ import com.example.algamoney.api.exception.PessoaInexistenteOuInativaException;
 import com.example.algamoney.api.exception.StandardErrorDTO;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
+import com.example.algamoney.api.repository.projection.ResumoLancamento;
 import com.example.algamoney.api.service.LancamentoService;
 
 @RestController
@@ -45,6 +46,12 @@ public class LancamentoController extends GenericController {
 	@Secured({ "ROLE_PESQUISAR_LANCAMENTO" })
 	public Page<Lancamento> index(final LancamentoFilter lancamentoFilter, final Pageable pageable) {
 		return lancamentoService.pesquisar(lancamentoFilter, pageable);
+	}
+	
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public Page<ResumoLancamento> summarize(LancamentoFilter lancamentoFilter, Pageable pageable) {
+		return lancamentoService.resumir(lancamentoFilter, pageable);
 	}
 
 	@GetMapping("/{id}")

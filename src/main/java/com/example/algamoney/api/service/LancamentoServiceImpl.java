@@ -15,6 +15,7 @@ import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.PessoaRepository;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
+import com.example.algamoney.api.repository.projection.ResumoLancamento;
 
 @Service
 public class LancamentoServiceImpl implements LancamentoService {
@@ -31,13 +32,13 @@ public class LancamentoServiceImpl implements LancamentoService {
 	}
 
 	@Override
-	public Lancamento obterPorId(Long id) {
+	public Lancamento obterPorId(final Long id) {
 		Optional<Lancamento> optional = lancamentoRepository.findById(id);
 		return optional.orElseThrow(() -> new ObjectNotFoundException("Lancamento not found! Id: " + id));
 	}
 
 	@Override
-	public Lancamento criar(Lancamento lancamento) {
+	public Lancamento criar(final Lancamento lancamento) {
 		Optional<Pessoa> optional = pessoaRepository.findById(lancamento.getPessoa().getCodigo());
 		if ( (!optional.isPresent()) || (optional.get().isInativo()) ) {
 			throw new PessoaInexistenteOuInativaException("Pessoa not found or inactive! Id: " + lancamento.getPessoa().getCodigo());
@@ -55,6 +56,11 @@ public class LancamentoServiceImpl implements LancamentoService {
 	public void delete(final Long id) {
 		this.obterPorId(id);
 		lancamentoRepository.deleteById(id);
+	}
+
+	@Override
+	public Page<ResumoLancamento> resumir(final LancamentoFilter lancamentoFilter, final Pageable pageable) {
+		return lancamentoRepository.resumir(lancamentoFilter, pageable);
 	}
 	
 
