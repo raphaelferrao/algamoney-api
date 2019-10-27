@@ -8,8 +8,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+import com.example.algamoney.api.config.ApiProperty;
+
 @SpringBootApplication
-@EnableConfigurationProperties(AlgamoneyApiApplication.class)
+@EnableConfigurationProperties(ApiProperty.class)
 public class AlgamoneyApiApplication {
 
 	public static void main(String[] args) {
