@@ -1,0 +1,15 @@
+--> Deploy api Heroku
+
+0) instalar "heroku cli" e o "git" 
+1) no prompt, digitar "heroku login" e logar
+2) no prompt, ir na pasta raiz do projeto e digitar "heroku create <nome unico no mundo>"
+	2.1 - projeto deve estar no git
+3) no prompt, ir na pasta raiz do projeto e digitar para as dependencias:
+	3.1) para mysql, digitar "heroku addons:create jawsdb"  (free: heroku addons:create jawsdb:kitefin)
+		3.1.1) heroku config:get JAWSDB_URL
+		mysql://mvzx4ib74keo8exe:l2vgam3zdvlhefrf@u28rhuskh0x5paau.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/gcltlwhouihkmelh
+		3.1.2) heroku config:set JDBC_DATABASE_URL=jdbc:mysql://u28rhuskh0x5paau.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/gcltlwhouihkmelh JDBC_DATABASE_USERNAME=mvzx4ib74keo8exe JDBC_DATABASE_PASSWORD=l2vgam3zdvlhefrf
+4) configurar o arquivo "application-prod.properties" para utilizar as variaveis do heroku
+5) incluir na raiz do projeto o arquivo "Procfile" com o conteudo:
+web: java -Dserver.port=$PORT -Dspring.profiles.active=prod $JAVA_OPTS -jar target/<nome_jar>*.jar
+
