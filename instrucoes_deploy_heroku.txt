@@ -12,4 +12,5 @@
 4) configurar o arquivo "application-prod.properties" para utilizar as variaveis do heroku
 5) incluir na raiz do projeto o arquivo "Procfile" com o conteudo:
 web: java -Dserver.port=$PORT -Dspring.profiles.active=prod $JAVA_OPTS -jar target/<nome_jar>*.jar
-
+6) para fazer build no heroku: "git push heroku master"
+	6.1) para ver o log da aplicação subindo: "heroku logs --tail" 

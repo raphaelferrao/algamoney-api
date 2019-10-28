@@ -100,6 +100,10 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
+					<compilerVersion>1.8</compilerVersion>
+			      	<source>1.8</source>
+		      		<target>1.8</target>
+      				<useIncrementalCompilation>true</useIncrementalCompilation>				
 					<failOnError>false</failOnError>
 					<generatedSourcesDirectory>src/main/java</generatedSourcesDirectory>
 				</configuration>
