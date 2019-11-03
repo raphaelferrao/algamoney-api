@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.algamoney.api.exception.ObjectNotFoundException;
@@ -52,6 +54,10 @@ public class PessoaServiceImpl implements PessoaService {
 		pessoa.setAtivo(ativo);
 		pessoaRepository.save(pessoa);
 	}
-	
+
+	@Override
+	public Page<Pessoa> findByNomeContaining(String nome, Pageable pageable) {
+		return pessoaRepository.findByNomeContainingIgnoreCase(nome, pageable);
+	}
 
 }
