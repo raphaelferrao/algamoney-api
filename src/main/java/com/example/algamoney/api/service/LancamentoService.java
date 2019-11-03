@@ -23,4 +23,6 @@ public interface LancamentoService {
 
 	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable);
 
+	public Lancamento atualizar(Long codigo, Lancamento lancamento);
+
 }

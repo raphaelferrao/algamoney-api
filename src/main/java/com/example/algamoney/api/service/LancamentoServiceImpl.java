@@ -3,6 +3,7 @@ package com.example.algamoney.api.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,6 +63,37 @@ public class LancamentoServiceImpl implements LancamentoService {
 	public Page<ResumoLancamento> resumir(final LancamentoFilter lancamentoFilter, final Pageable pageable) {
 		return lancamentoRepository.resumir(lancamentoFilter, pageable);
 	}
-	
+
+	public Lancamento atualizar(Long codigo, Lancamento lancamento) {
+		Lancamento lancamentoSalvo = buscarLancamentoExistente(codigo);
+		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
+			validarPessoa(lancamento);
+		}
+
+		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");
+
+		return lancamentoRepository.save(lancamentoSalvo);
+	}
+
+	private void validarPessoa(Lancamento lancamento) {
+		if (lancamento!=null) {
+			Optional<Pessoa> optionalPessoa = null;
+			if ( (lancamento.getPessoa()!=null) && (lancamento.getPessoa().getCodigo() != null) ) {
+				optionalPessoa = pessoaRepository.findById(lancamento.getPessoa().getCodigo());
+
+				if (!optionalPessoa.isPresent()) {
+					throw new PessoaInexistenteOuInativaException();
+				}
+			}
+		}
+	}
+
+	private Lancamento buscarLancamentoExistente(Long codigo) {
+		Optional<Lancamento> optionalLancamentoSalvo = lancamentoRepository.findById(codigo);
+		if (!optionalLancamentoSalvo.isPresent()) {
+			throw new IllegalArgumentException();
+		}
+		return optionalLancamentoSalvo.get();
+	}
 
 }
