@@ -82,7 +82,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
 		final HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 		
-		final String msgError = messageSource.getMessage("msg.error.missing.servlet.request.parameter", null, LocaleContextHolder.getLocale());
+		final String msgError = messageSource.getMessage("msg.error.message.not.readable", null, LocaleContextHolder.getLocale());
 		
 		final StandardErrorDTO standardErrorResponse = new StandardErrorDTO(Calendar.getInstance().getTimeInMillis(), httpStatus.value(), 
 				msgError, request.getContextPath());
