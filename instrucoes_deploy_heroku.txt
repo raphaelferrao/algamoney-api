@@ -16,4 +16,4 @@ web: java -Dserver.port=$PORT -Dspring.profiles.active=prod $JAVA_OPTS -jar targ
 	6.1) para ver o log da aplicação subindo: "heroku logs --tail" 
 	
 	
-	?createDatabaseIfNotExists=true&useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
+	?createDatabaseIfNotExist=true&useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
