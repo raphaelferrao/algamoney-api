@@ -3,6 +3,7 @@ package com.example.algamoney.api.cors;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -40,7 +41,11 @@ public class CorsFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
 		
-		resp.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, ALLOW_ORIGIN);
+		String allowOrigin = Optional
+				.ofNullable(req.getHeader(HttpHeaders.ORIGIN))
+				.orElse(ALLOW_ORIGIN);		
+		
+		resp.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, allowOrigin);
 		resp.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, ALLOW_CREDENTIALS);
 		
 		if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
