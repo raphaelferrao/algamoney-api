@@ -1,6 +1,7 @@
 package com.example.algamoney.api.controller;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
+import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
 import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.exception.ErrorDTO;
 import com.example.algamoney.api.exception.PessoaInexistenteOuInativaException;
@@ -56,7 +59,7 @@ public class LancamentoController extends GenericController {
 	}
 
 	@GetMapping("/{id}")
-	@Secured({ "ROLE_PESQUISAR_LANCAMENTO" })
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public ResponseEntity<?> get(@PathVariable final Long id) {
 		Lancamento lancamento = lancamentoService.obterPorId(id);
 		return ResponseEntity.ok(lancamento);
@@ -107,4 +110,15 @@ public class LancamentoController extends GenericController {
 		}
 	}
 	
+	@GetMapping("/estatisticas/por-categoria")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public List<LancamentoEstatisticaCategoria> porCategoria(){
+		return this.lancamentoService.porCategoria();
+	}
+	
+	@GetMapping("/estatisticas/por-dia")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public List<LancamentoEstatisticaDia> porDia(){
+		return this.lancamentoService.porDia();
+	}
 }

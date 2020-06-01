@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
+import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.repository.projection.ResumoLancamento;
@@ -24,5 +26,9 @@ public interface LancamentoService {
 	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable);
 
 	public Lancamento atualizar(Long codigo, Lancamento lancamento);
+
+	public List<LancamentoEstatisticaCategoria> porCategoria();
+	
+	public List<LancamentoEstatisticaDia> porDia();
 
 }

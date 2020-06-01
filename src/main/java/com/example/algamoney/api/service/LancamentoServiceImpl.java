@@ -1,5 +1,6 @@
 package com.example.algamoney.api.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
+import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
 import com.example.algamoney.api.exception.ObjectNotFoundException;
 import com.example.algamoney.api.exception.PessoaInexistenteOuInativaException;
 import com.example.algamoney.api.model.Lancamento;
@@ -94,6 +97,16 @@ public class LancamentoServiceImpl implements LancamentoService {
 			throw new IllegalArgumentException();
 		}
 		return optionalLancamentoSalvo.get();
+	}
+
+	@Override
+	public List<LancamentoEstatisticaCategoria> porCategoria() {
+		return lancamentoRepository.porCategoria(LocalDate.now());
+	}
+	
+	@Override
+	public List<LancamentoEstatisticaDia> porDia() {
+		return lancamentoRepository.porDia(LocalDate.now());
 	}
 
 }
