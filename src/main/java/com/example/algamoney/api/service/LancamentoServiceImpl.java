@@ -1,7 +1,12 @@
 package com.example.algamoney.api.service;
 
+import java.io.InputStream;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -12,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
 import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
+import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
 import com.example.algamoney.api.exception.ObjectNotFoundException;
 import com.example.algamoney.api.exception.PessoaInexistenteOuInativaException;
 import com.example.algamoney.api.model.Lancamento;
@@ -20,6 +26,11 @@ import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.PessoaRepository;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.repository.projection.ResumoLancamento;
+
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Service
 public class LancamentoServiceImpl implements LancamentoService {
@@ -107,6 +118,22 @@ public class LancamentoServiceImpl implements LancamentoService {
 	@Override
 	public List<LancamentoEstatisticaDia> porDia() {
 		return lancamentoRepository.porDia(LocalDate.now());
+	}
+	
+	public byte[] relatorioPorPessoa(LocalDate dataInicio, LocalDate dataFim) throws Exception {
+		List<LancamentoEstatisticaPessoa> dados = lancamentoRepository.porPessoa(dataInicio, dataFim);
+		
+		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("DT_INICIO", Date.valueOf(dataInicio));
+		parametros.put("DT_FIM", Date.valueOf(dataFim));
+		parametros.put("REPORT_LOCALE", new Locale("pt", "BR"));
+		
+		InputStream inputStream = this.getClass().getResourceAsStream("/relatorios/lancamentos-por-pessoa.jasper");
+		
+		JasperPrint jasperPrint = JasperFillManager.
+				fillReport(inputStream, parametros, new JRBeanCollectionDataSource(dados));
+		
+		return JasperExportManager.exportReportToPdf(jasperPrint);		
 	}
 
 }

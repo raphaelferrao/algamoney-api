@@ -1,5 +1,6 @@
 package com.example.algamoney.api.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -30,5 +31,7 @@ public interface LancamentoService {
 	public List<LancamentoEstatisticaCategoria> porCategoria();
 	
 	public List<LancamentoEstatisticaDia> porDia();
+	
+	public byte[] relatorioPorPessoa(LocalDate dataInicio, LocalDate dataFim) throws Exception;
 
 }
