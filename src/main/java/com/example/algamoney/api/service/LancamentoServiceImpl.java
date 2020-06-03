@@ -9,6 +9,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,12 +23,16 @@ import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
 import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
 import com.example.algamoney.api.exception.ObjectNotFoundException;
 import com.example.algamoney.api.exception.PessoaInexistenteOuInativaException;
+import com.example.algamoney.api.mail.Mailer;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.model.Pessoa;
+import com.example.algamoney.api.model.Usuario;
 import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.PessoaRepository;
+import com.example.algamoney.api.repository.UsuarioRepository;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.repository.projection.ResumoLancamento;
+import com.example.algamoney.api.util.Utils;
 
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -36,11 +42,21 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Service
 public class LancamentoServiceImpl implements LancamentoService {
 	
+	private static final Logger log = LoggerFactory.getLogger(LancamentoServiceImpl.class);
+	
+	private static final String PERMISSAO_DESTINATARIOS = "ROLE_PESQUISAR_LANCAMENTO";
+	
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private Mailer mailer;
 
 	@Override
 	public List<Lancamento> listarTodos() {
@@ -122,8 +138,32 @@ public class LancamentoServiceImpl implements LancamentoService {
 	}
 	
 	@Scheduled(cron = "0 0 6 * * *") // esse metodo executara todo dia as 06:00:00
+//	@Scheduled(fixedDelay = 1000 * 60 * 60)
 	public void avisarSobreAgendamentosVencidos() {
 		
+		if (log.isDebugEnabled()) {
+			log.debug("Preparando envio de emails de aviso de lançamentos vencidos.");
+		}
+				
+		List<Lancamento> lancVencidos = lancamentoRepository
+				.findByDataVencimentoLessThanEqualAndDataPagamentoIsNull(LocalDate.now());
+		
+		if (Utils.empty(lancVencidos)) {
+			log.info("Sem lançamentos vencidos para aviso.");
+			return;
+		} 
+		
+		log.info("Existem {} lançamentos vencidos.", lancVencidos.size());
+			
+		List<Usuario> destinatarios = usuarioRepository.findByPermissoesDescricao(PERMISSAO_DESTINATARIOS);
+		
+		if (Utils.empty(destinatarios)) {
+			log.warn("Existem lançamentos vencidos, mas o sistema não encontrou destinatários.");
+			return;
+		}
+	
+		mailer.avisarSobreLancamentosVencidos(lancVencidos, destinatarios);
+		log.info("Envio de email de aviso de lançamentos vencidos concluído!");
 	}
 	
 	public byte[] relatorioPorPessoa(LocalDate dataInicio, LocalDate dataFim) throws Exception {

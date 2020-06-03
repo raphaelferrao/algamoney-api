@@ -1,18 +1,26 @@
 package com.example.algamoney.api.mail;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import com.example.algamoney.api.model.Lancamento;
+import com.example.algamoney.api.model.Usuario;
 
 @Component
 public class Mailer {
@@ -23,6 +31,7 @@ public class Mailer {
 	@Autowired
 	private TemplateEngine templateEngine;
 	
+
 	/*
 	@EventListener
 	private void teste(ApplicationReadyEvent event) {
@@ -74,4 +83,21 @@ public class Mailer {
 		
 		this.enviarEmail(remetente, destinatarios, assunto, mensagem);
 	}
+	
+	public void avisarSobreLancamentosVencidos(List<Lancamento> lancVencidos, 
+			List<Usuario> destinatarios) {
+		
+		String template = "mail/aviso-lancamentos-vencidos";
+		
+		Map<String, Object> variaveis = new HashMap();
+		variaveis.put("lancamentos", lancVencidos);
+		
+		List<String> emailsDestinatarios = destinatarios.stream()
+				.map( u -> u.getEmail() )
+				.collect(Collectors.toList());
+		
+		this.enviarEmail("no-reply@email.com", emailsDestinatarios, "Lançamentos Vencidos", template, variaveis);
+		
+	}
+	
 }
