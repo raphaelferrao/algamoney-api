@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
@@ -118,6 +119,11 @@ public class LancamentoServiceImpl implements LancamentoService {
 	@Override
 	public List<LancamentoEstatisticaDia> porDia() {
 		return lancamentoRepository.porDia(LocalDate.now());
+	}
+	
+	@Scheduled(cron = "0 0 6 * * *") // esse metodo executara todo dia as 06:00:00
+	public void avisarSobreAgendamentosVencidos() {
+		
 	}
 	
 	public byte[] relatorioPorPessoa(LocalDate dataInicio, LocalDate dataFim) throws Exception {
