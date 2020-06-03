@@ -22,6 +22,8 @@
 		<jasperreports.version>6.12.2</jasperreports.version>
 		<jasperreports-functions.version>6.12.2</jasperreports-functions.version>
 		<jasperreports-fonts.version>6.12.2</jasperreports-fonts.version>
+		
+		<aws-java-sdk.version>1.11.794</aws-java-sdk.version>
 	</properties>
 
 	<dependencies>
@@ -97,16 +99,19 @@
 			<optional>true</optional>
 		</dependency>
 		
+		<!-- EMail -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 		
+		<!-- Thymeleaf -->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		
+		<!-- Jasper Reports -->
 		<dependency>
 		    <groupId>net.sf.jasperreports</groupId>
 		    <artifactId>jasperreports</artifactId>
@@ -121,6 +126,13 @@
 		    <groupId>net.sf.jasperreports</groupId>
 		    <artifactId>jasperreports-fonts</artifactId>
 		    <version>${jasperreports-fonts.version}</version>
+		</dependency>
+		
+		<!-- Amazon S3 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>${aws-java-sdk.version}</version>
 		</dependency>
 	</dependencies>
 
