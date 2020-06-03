@@ -81,6 +81,8 @@ public class ApiProperty {
 		private String accessKeyId;
 		
 		private String secretAccessKey;
+		
+		private String bucket = "rapferrao-algamoney-arquivos";
 
 		public String getAccessKeyId() {
 			return accessKeyId;
@@ -95,6 +97,13 @@ public class ApiProperty {
 		}
 		public void setSecretAccessKey(String secretAccessKey) {
 			this.secretAccessKey = secretAccessKey;
+		}
+
+		public String getBucket() {
+			return bucket;
+		}
+		public void setBucket(String bucket) {
+			this.bucket = bucket;
 		}
 
 	}
