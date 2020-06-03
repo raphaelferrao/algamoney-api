@@ -1,17 +1,23 @@
 package com.example.algamoney.api.model;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Pessoa implements Serializable {
@@ -31,6 +37,11 @@ public class Pessoa implements Serializable {
 	
 	@NotNull
 	private Boolean ativo;
+	
+	@JsonIgnoreProperties("pessoa")
+	@Valid
+	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private List<Contato> contatos;
 
 	public Long getCodigo() {
 		return codigo;
@@ -65,6 +76,13 @@ public class Pessoa implements Serializable {
 	public boolean isInativo() {
 		return (ativo==null) || (!this.ativo);
 	} 
+	
+	public List<Contato> getContatos() {
+		return contatos;
+	}
+	public void setContatos(List<Contato> contatos) {
+		this.contatos = contatos;
+	}
 	
 	@Override
 	public int hashCode() {

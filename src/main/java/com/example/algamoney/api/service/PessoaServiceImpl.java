@@ -26,6 +26,8 @@ public class PessoaServiceImpl implements PessoaService {
 
 	@Override
 	public Pessoa criar(Pessoa pessoa) {
+		pessoa.getContatos().forEach(c -> c.setPessoa(pessoa));
+		
 		return pessoaRepository.save(pessoa);
 	}
 
@@ -43,8 +45,14 @@ public class PessoaServiceImpl implements PessoaService {
 
 	@Override
 	public Pessoa update(final Long id, final Pessoa pessoaAlterada) {
+		
 		Pessoa pessoa = this.obterPorId(id);
-		BeanUtils.copyProperties(pessoaAlterada, pessoa, "codigo");
+		
+		pessoa.getContatos().clear();
+		pessoa.setContatos(pessoaAlterada.getContatos());
+		pessoa.getContatos().forEach(c -> c.setPessoa(pessoa));
+
+		BeanUtils.copyProperties(pessoaAlterada, pessoa, "codigo", "contatos");
 		return pessoaRepository.save(pessoa);
 	}
 

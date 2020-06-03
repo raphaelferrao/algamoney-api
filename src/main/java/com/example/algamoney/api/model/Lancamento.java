@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Lancamento implements Serializable {
@@ -50,6 +51,7 @@ public class Lancamento implements Serializable {
 	@NotNull
 	private Categoria categoria;
 
+	@JsonIgnoreProperties("contatos")
 	@ManyToOne
 	@JoinColumn(name = "codigo_pessoa")
 	@NotNull
