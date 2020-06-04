@@ -8,6 +8,8 @@ import com.example.algamoney.api.model.TipoLancamento;
 
 public class LancamentoEstatisticaDia implements Serializable {
 	
+	private static final long serialVersionUID = 5810537043269534498L;
+
 	private TipoLancamento tipo;
 	
 	private LocalDate dia;

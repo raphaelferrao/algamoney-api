@@ -18,6 +18,8 @@ import javax.validation.constraints.Size;
 @Entity
 public class Usuario implements Serializable {
 
+	private static final long serialVersionUID = -5562980294603380633L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;

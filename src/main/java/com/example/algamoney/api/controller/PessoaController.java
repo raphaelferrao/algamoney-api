@@ -1,7 +1,5 @@
 package com.example.algamoney.api.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 

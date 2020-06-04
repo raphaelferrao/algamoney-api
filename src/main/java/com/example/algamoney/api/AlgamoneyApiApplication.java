@@ -7,10 +7,11 @@ import javax.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.aws.autoconfigure.context.ContextStackAutoConfiguration;
 
 import com.example.algamoney.api.config.ApiProperty;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = ContextStackAutoConfiguration.class)
 @EnableConfigurationProperties(ApiProperty.class)
 public class AlgamoneyApiApplication {
 

@@ -1,9 +1,5 @@
 package com.example.algamoney.api.controller;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
@@ -38,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.algamoney.api.dto.Anexo;
 import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
 import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
 import com.example.algamoney.api.event.RecursoCriadoEvent;
@@ -48,6 +45,7 @@ import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.repository.projection.ResumoLancamento;
 import com.example.algamoney.api.service.LancamentoService;
+import com.example.algamoney.api.storage.S3;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -55,6 +53,9 @@ public class LancamentoController extends GenericController {
 	
 	@Autowired
 	private LancamentoService lancamentoService;
+	
+	@Autowired
+	private S3 s3;
 	
 	@GetMapping
 	@Secured({ "ROLE_PESQUISAR_LANCAMENTO" })
@@ -151,17 +152,10 @@ public class LancamentoController extends GenericController {
 	
 	@PostMapping("/anexo")
 	@PreAuthorize("hasRole('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
-	public String uploadAnexo(@RequestParam MultipartFile anexo) {
+	public Anexo uploadAnexo(@RequestParam MultipartFile anexo) {
 		
-		try (OutputStream out = new FileOutputStream("C:/temp/teste/anexo-" + anexo.getOriginalFilename())) {
-			out.write(anexo.getBytes());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return "";
+		String nome = s3.salvarTemporariamente(anexo);
+		return new Anexo(nome, s3.configurarUrl(nome));
 	}
 	
 }

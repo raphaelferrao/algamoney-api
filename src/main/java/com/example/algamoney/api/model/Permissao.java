@@ -8,6 +8,8 @@ import javax.persistence.Id;
 @Entity
 public class Permissao implements Serializable {
 
+	private static final long serialVersionUID = 8170848947356163893L;
+
 	@Id
 	private Long codigo;
 	

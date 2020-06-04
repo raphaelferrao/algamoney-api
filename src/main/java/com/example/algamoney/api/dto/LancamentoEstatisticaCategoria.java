@@ -7,6 +7,8 @@ import com.example.algamoney.api.model.Categoria;
 
 public class LancamentoEstatisticaCategoria implements Serializable {
 	
+	private static final long serialVersionUID = -1331434158504454805L;
+
 	private Categoria categoria;
 	
 	private BigDecimal total;

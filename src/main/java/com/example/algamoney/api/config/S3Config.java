@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.BucketLifecycleConfiguration;
@@ -17,6 +18,8 @@ import com.amazonaws.services.s3.model.lifecycle.LifecycleTagPredicate;
 
 @Configuration
 public class S3Config {
+	
+	public static final Tag TAG_EXPIRAR = new Tag("expirar", "true");
 	
 	@Autowired
 	private ApiProperty apiProperty;
@@ -29,6 +32,7 @@ public class S3Config {
 		
 		AmazonS3 amazonS3 = AmazonS3ClientBuilder.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(credenciais))
+				.withRegion(Regions.US_WEST_2)
 				.build();
 		
 		if (!amazonS3.doesBucketExistV2(apiProperty.getS3().getBucket())) {
@@ -38,7 +42,7 @@ public class S3Config {
 			BucketLifecycleConfiguration.Rule regraExpiracao = 
 					new BucketLifecycleConfiguration.Rule()
 						.withId("Regra de expiracao de arquivos temporarios")
-						.withFilter(new LifecycleFilter(new LifecycleTagPredicate(new Tag("expirar", "true"))))
+						.withFilter(new LifecycleFilter(new LifecycleTagPredicate(TAG_EXPIRAR)))
 						.withExpirationInDays(1)
 						.withStatus(BucketLifecycleConfiguration.ENABLED);
 			

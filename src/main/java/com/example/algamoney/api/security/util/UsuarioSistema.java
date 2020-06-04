@@ -9,6 +9,8 @@ import com.example.algamoney.api.model.Usuario;
 
 public class UsuarioSistema extends User {
 
+	private static final long serialVersionUID = -3268320641823786854L;
+	
 	private Usuario usuario;
 	
 	public UsuarioSistema(Usuario usuario, Collection<? extends GrantedAuthority> permissoes) {
