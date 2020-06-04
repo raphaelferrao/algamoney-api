@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -58,6 +59,11 @@ public class Lancamento implements Serializable {
 	@JoinColumn(name = "codigo_pessoa")
 	@NotNull
 	private Pessoa pessoa;
+	
+	private String anexo;
+	
+	@Transient
+	private String urlAnexo;
 
 	public Long getCodigo() {
 		return codigo;
@@ -120,6 +126,20 @@ public class Lancamento implements Serializable {
 	}
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
+	}
+	
+	public String getAnexo() {
+		return anexo;
+	}
+	public void setAnexo(String anexo) {
+		this.anexo = anexo;
+	}
+	
+	public String getUrlAnexo() {
+		return urlAnexo;
+	}
+	public void setUrlAnexo(String urlAnexo) {
+		this.urlAnexo = urlAnexo;
 	}
 	
 	@JsonIgnore

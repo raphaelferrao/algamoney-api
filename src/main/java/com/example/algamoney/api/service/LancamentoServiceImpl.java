@@ -32,6 +32,7 @@ import com.example.algamoney.api.repository.PessoaRepository;
 import com.example.algamoney.api.repository.UsuarioRepository;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.repository.projection.ResumoLancamento;
+import com.example.algamoney.api.storage.S3;
 import com.example.algamoney.api.util.Utils;
 
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -57,6 +58,9 @@ public class LancamentoServiceImpl implements LancamentoService {
 	
 	@Autowired
 	private Mailer mailer;
+	
+	@Autowired
+	private S3 s3;
 
 	@Override
 	public List<Lancamento> listarTodos() {
@@ -71,9 +75,10 @@ public class LancamentoServiceImpl implements LancamentoService {
 
 	@Override
 	public Lancamento criar(final Lancamento lancamento) {
-		Optional<Pessoa> optional = pessoaRepository.findById(lancamento.getPessoa().getCodigo());
-		if ( (!optional.isPresent()) || (optional.get().isInativo()) ) {
-			throw new PessoaInexistenteOuInativaException("Pessoa not found or inactive! Id: " + lancamento.getPessoa().getCodigo());
+		validarPessoa(lancamento);
+		
+		if (!Utils.empty(lancamento.getAnexo())) {
+			s3.salvar(lancamento.getAnexo());
 		}
 		
 		return lancamentoRepository.save(lancamento);
@@ -97,8 +102,18 @@ public class LancamentoServiceImpl implements LancamentoService {
 
 	public Lancamento atualizar(Long codigo, Lancamento lancamento) {
 		Lancamento lancamentoSalvo = buscarLancamentoExistente(codigo);
+		
 		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
 			validarPessoa(lancamento);
+		}
+		
+		if (Utils.empty(lancamento.getAnexo()) && !Utils.empty(lancamentoSalvo.getAnexo())) {
+			s3.remover(lancamentoSalvo.getAnexo());
+		
+		} else if ( !Utils.empty(lancamento.getAnexo()) && 
+					!lancamento.getAnexo().equals(lancamentoSalvo.getAnexo()) ) {
+			
+			s3.substituir(lancamentoSalvo.getAnexo(), lancamento.getAnexo());
 		}
 
 		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");

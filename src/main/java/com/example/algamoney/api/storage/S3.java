@@ -2,6 +2,7 @@ package com.example.algamoney.api.storage;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -12,13 +13,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GroupGrantee;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ObjectTagging;
 import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.SetObjectTaggingRequest;
 import com.example.algamoney.api.config.ApiProperty;
 import com.example.algamoney.api.config.S3Config;
+import com.example.algamoney.api.util.Utils;
 
 @Component
 public class S3 {
@@ -66,6 +70,18 @@ public class S3 {
 		return nomeUnicoArquivo;
 	}
 	
+	public void salvar(String objeto) {
+
+		String nomeBucket = apiProperty.getS3().getBucket();
+		
+		SetObjectTaggingRequest setObjectTaggingRequest = new SetObjectTaggingRequest(
+				nomeBucket, 
+				objeto, 
+				new ObjectTagging(Collections.emptyList()));
+		
+		amazonS3.setObjectTagging(setObjectTaggingRequest);
+	}
+	
 	public String configurarUrl(String objeto) {
 		return "\\" + apiProperty.getS3().getBucket() + ".s3.amazonaws.com/" + objeto;
 	}
@@ -73,5 +89,22 @@ public class S3 {
 	private String gerarNomeUnico(String originalFilename) {
 		return UUID.randomUUID().toString() + "_" + originalFilename;
 	}
-	
+
+	public void remover(String objeto) {
+		String nomeBucket = apiProperty.getS3().getBucket();
+		
+		DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(nomeBucket, objeto);
+		
+		amazonS3.deleteObject(deleteObjectRequest);
+	}
+
+	public void substituir(String objetoAntigo, String objetoNovo) {
+		
+		if (!Utils.empty(objetoAntigo)) {
+			this.remover(objetoAntigo);
+		}
+		
+		this.salvar(objetoNovo);
+	}
+
 }
