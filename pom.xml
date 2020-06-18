@@ -19,6 +19,9 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		
+	    <spring-security-oauth2.version>2.3.7.RELEASE</spring-security-oauth2.version>
+	    <spring-security-jwt.version>1.0.11.RELEASE</spring-security-jwt.version>
+		
 		<jasperreports.version>6.12.2</jasperreports.version>
 		<jasperreports-functions.version>6.12.2</jasperreports-functions.version>
 		<jasperreports-fonts.version>6.12.2</jasperreports-fonts.version>
@@ -85,12 +88,12 @@
 		<dependency>
 		    <groupId>org.springframework.security.oauth</groupId>
 		    <artifactId>spring-security-oauth2</artifactId>
-		    <version>2.3.7.RELEASE</version>
+		    <version>${spring-security-oauth2.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-jwt</artifactId>
-		    <version>1.0.11.RELEASE</version>
+		    <version>${spring-security-jwt.version}</version>
 		</dependency>
 		
 		<dependency>
@@ -128,13 +131,6 @@
 		    <version>${jasperreports-fonts.version}</version>
 		</dependency>
 		
-		<!-- Amazon S3 -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.amazonaws</groupId> -->
-<!-- 			<artifactId>aws-java-sdk</artifactId> -->
-<!-- 			<version>${aws-java-sdk.version}</version> -->
-<!-- 		</dependency> -->
-
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-aws</artifactId>
@@ -157,15 +153,6 @@
 					<failOnError>false</failOnError>
 					<generatedSourcesDirectory>src/main/java</generatedSourcesDirectory>
 				</configuration>
-			</plugin>
-			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-surefire-plugin</artifactId>
-			    <configuration>
-			        <classpathDependencyExcludes>
-			            <classpathDependencyExcludes>org.springframework.cloud:spring-cloud-aws-autoconfigure</classpathDependencyExcludes>
-			        </classpathDependencyExcludes>
-			    </configuration>
 			</plugin>
 		</plugins>
 	</build>
