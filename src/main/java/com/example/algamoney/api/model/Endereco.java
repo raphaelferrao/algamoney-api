@@ -2,8 +2,9 @@ package com.example.algamoney.api.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -30,14 +31,9 @@ public class Endereco implements Serializable {
 	@Size(min=5, max=50)
 	private String bairro;
 	
-	@NotNull
-	@Size(min=5, max=50)
-	private String cidade;
-	
-	@NotNull
-	@Size(min=2, max=2)
-	@Column(name = "sigla_uf")
-	private String siglaUf;
+	@ManyToOne
+	@JoinColumn(name = "codigo_cidade")
+	private Cidade cidade;
 
 	public String getCep() {
 		return cep;
@@ -73,19 +69,12 @@ public class Endereco implements Serializable {
 	public void setBairro(String bairro) {
 		this.bairro = bairro;
 	}
-
-	public String getCidade() {
+	
+	public Cidade getCidade() {
 		return cidade;
 	}
-	public void setCidade(String cidade) {
+	public void setCidade(Cidade cidade) {
 		this.cidade = cidade;
-	}
-
-	public String getSiglaUf() {
-		return siglaUf;
-	}
-	public void setSiglaUf(String siglaUf) {
-		this.siglaUf = siglaUf;
 	}
 
 }
